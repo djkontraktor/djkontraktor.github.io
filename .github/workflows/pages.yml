@@ -1,37 +1,34 @@
-name: Build & Deploy GitHub Pages with LFS
+name: Pages with LFS & Jekyll
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository (with LFS)
+      - name: Checkout (with LFS)
         uses: actions/checkout@v3
         with:
           lfs: true
           fetch-depth: 0
 
-      - name: Set up Ruby (for Jekyll sites)
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.2'
-          bundler-cache: true      # caches gems between runs
+
+      - name: Install Jekyll & Bundler
+        run: gem install bundler jekyll
 
       - name: Build site
         run: jekyll build --destination _site
-
-      - name: Build site
-        run: |
-          bundle exec jekyll build   # Jekyll
-          # or npm run build         # other static generators
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site        # or your `public/` folder
+          publish_dir: ./_site
           publish_branch: gh-pages
