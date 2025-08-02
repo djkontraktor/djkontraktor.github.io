@@ -21,10 +21,8 @@ jobs:
           ruby-version: '3.2.2'
           bundler-cache: true      # caches gems between runs
 
-      - name: Install dependencies
-        run: |
-          bundle install   # for Jekyll
-          # or npm install # for Node static sites
+      - name: Build site
+        run: jekyll build --destination _site
 
       - name: Build site
         run: |
